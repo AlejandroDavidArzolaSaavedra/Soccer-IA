@@ -18,74 +18,20 @@
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.16.0/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/brain.js@2.0.0-beta.2/dist/brain-browser.min.js"></script>
   <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+  <script src="../js/passing.js" type="module"></script>
+  <link rel="stylesheet" href="../css/passing.css">
 </head>
 
-<style>
-    .card-tilted {
-      transform: rotateX(75deg) translateY(-50px) translateZ(-50px);
-      transition: transform 0.6s, box-shadow 0.6s;
-    }
-    .card-tilted:hover {
-      transform: rotateX(0deg);
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    }
-    @keyframes shine {
-      0% {
-        transform: translateX(-100%) rotate(1deg);
-      }
-      100% {
-        transform: translateX(100%) rotate(1deg);
-      }
-    }
-    .shine-effect::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 150%;
-      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.6), transparent 70%);
-      transform: translateX(-100%) rotate(12deg);
-      animation: shine 2s linear infinite;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .card-tilted:hover .shine-effect::before {
-      opacity: 1;
-    }
-    #tooltip {
-      pointer-events: none;
-      white-space: normal;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fadeIn {
-      animation: fadeIn 0.5s ease-out;
-    }
-    #dashboard > div {
-      background: white;
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      transition: all 0.3s ease;
-      border: 1px solid rgba(229, 231, 235, 0.8);
-    }
-    #dashboard > div:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 15px -3px rgba(6, 8, 8, 0.466), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
-</style>
-<audio id="miAudio" src="../assets/passing.mp3"></audio>
+<audio id="miAudio" src="../assets/passing.mp3" aria-label="Efecto de sonido de pases"></audio>
 
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 text-gray-800 min-h-screen p-6">
-  <div class="max-w-7xl mx-auto" onclick="document.getElementById('miAudio').play()" >
-    <!-- Header con logo y título -->
+  <a href="#main-content" class="sr-only focus:not-sr-only">Saltar al contenido principal</a>
+  
+  <div class="max-w-7xl mx-auto" onclick="document.getElementById('miAudio').play()">
     <header class="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
-      <a href="../index.html">
+      <a href="../index.html" aria-label="Volver a la página principal">
         <div class="flex items-center gap-3">
-          <img src="../assets/kingsIA.svg" alt="Logo Kings League" style="width: 6rem">
+          <img src="../assets/kingsIA.svg" alt="Logo Kings League" style="width: 6rem" role="img">
           <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r" style="color: #8E0303;">
             Estadísticas de Pases <span class="block text-xl text-gray-600">Kings League Mercato</span>
           </h1>
@@ -93,27 +39,27 @@
       </a>
       
       <div class="flex items-center gap-2">
-        <div class="flex gap-2 flex-wrap justify-center">
-          <button onclick="loadYear('2023')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="flex gap-2 flex-wrap justify-center" role="group" aria-label="Opciones de temporada">
+          <button onclick="loadYear('2023')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Ver estadísticas de 2023">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             2023
           </button>
-          <button onclick="loadYear('2024')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button onclick="loadYear('2024')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Ver estadísticas de 2024">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             2024
           </button>
-          <button onclick="loadYear('combined')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button onclick="loadYear('combined')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Ver estadísticas combinadas">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
             Combinado
           </button>
-          <button onclick="loadYear('splits-only')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button onclick="loadYear('splits-only')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Ver solo splits">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
             Solo Splits
@@ -122,18 +68,17 @@
       </div>
     </header>
 
-    <!-- Loading spinner -->
-    <div id="loading" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 backdrop-blur-sm">
+    <div id="loading" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 backdrop-blur-sm" role="alert" aria-live="assertive" aria-busy="true">
       <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4">
         <div class="flex items-center gap-4 mb-4">
-          <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+          <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500" aria-hidden="true"></div>
           <div>
             <p class="text-lg font-semibold text-gray-800">Procesando datos...</p>
             <p class="text-sm text-gray-500" id="loadingText">Cargando archivos de estadísticas</p>
           </div>
         </div>
         <div class="w-full bg-gray-200 rounded-full h-2.5">
-          <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-purple-600 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
+          <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-purple-600 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 0%" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso de carga"></div>
         </div>
         <div class="mt-2 flex justify-between text-xs text-gray-500">
           <span id="progressText">0%</span>
@@ -142,107 +87,105 @@
       </div>
     </div>
 
-    <nav class="flex gap-2 flex-wrap justify-center mb-4">
-      <a href="./goals.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <nav class="flex gap-2 flex-wrap justify-center mb-4" aria-label="Menú de estadísticas">
+      <a href="./goals.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas de goles">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
         Goles
       </a>
-      <a href="./shots.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./shots.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas de tiros">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
         </svg>
         Tiros
       </a>
-      <a href="./passing.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./passing.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-current="page" aria-label="Estadísticas de pases (página actual)">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
         Pases
       </a>
-      <a href="./offensives.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./offensives.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas ofensivas">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
         Ofensivas
       </a>
-      <a href="./defensives.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./defensives.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas defensivas">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
         Defensivas
       </a>
-      <a href="./cards.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./cards.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas de tarjetas">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
         Tarjetas
       </a>
-      <a href="./match_MVP.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./match_MVP.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas de MVP del partido">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
         MVP Partido
       </a>
-      <a href="./top_goal_keeper.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./top_goal_keeper.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas de porteros">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
         Portero
       </a>
     </nav>
 
-    <!-- Imagen de portada -->
-    <div class="relative w-full mb-8 cursor-pointer" onclick="document.getElementById('miAudio').play()" style="justify-content: center;">
-      <img src="../assets/portada_passing.png" alt="Kings League" class="w-full h-112 rounded-lg shadow-lg">
-      <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50"></div>
+    <div class="relative w-full mb-8 cursor-pointer" onclick="document.getElementById('miAudio').play()" style="justify-content: center;" tabindex="0" aria-label="Imagen de portada de estadísticas de pases">
+      <img src="../assets/portada_passing.png" alt="Jugadores de la Kings League realizando pases" class="w-full h-112 rounded-lg shadow-lg">
+      <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50" aria-hidden="true"></div>
       <h2 class="absolute top-4 left-4 text-white text-2xl font-bold">Estadísticas de Pases - Kings League Mercato</h2>
     </div>
 
-    <div class="mt-4 mb-8" style="display: inline-block;">
-      <p class="text-lg text-gray-500">
-        Esta plataforma recopila datos desde la 
-        <a href="https://www.kingsleague.pro/" target="_blank" class="text-blue-600 hover:underline">página oficial de la Kings League</a> 
-        y los transforma en contenido visual e interactivo. Utilizamos técnicas de análisis estadístico avanzado, visualización de datos e inteligencia artificial para ofrecer una experiencia única y enriquecedora.
-      </p>
-      <p class="text-lg text-gray-500 mt-2">
-        Ideal para entrenadores, analistas y fanáticos de la Kings League, esta herramienta permite explorar el rendimiento de los jugadores de forma profesional, intuitiva y entretenida.
-      </p>
+    <main id="main-content">
+      <div class="mt-4 mb-8" style="display: inline-block;">
+        <p class="text-lg text-gray-500">
+          Esta plataforma recopila datos desde la 
+          <a href="https://www.kingsleague.pro/" target="_blank" class="text-blue-600 hover:underline" aria-label="Página oficial de la Kings League (se abre en nueva ventana)">página oficial de la Kings League</a> 
+          y los transforma en contenido visual e interactivo. Utilizamos técnicas de análisis estadístico avanzado, visualización de datos e inteligencia artificial para ofrecer una experiencia única y enriquecedora.
+        </p>
+        <p class="text-lg text-gray-500 mt-2">
+          Ideal para entrenadores, analistas y fanáticos de la Kings League, esta herramienta permite explorar el rendimiento de los jugadores de forma profesional, intuitiva y entretenida.
+        </p>
 
-      <ul class="list-disc list-inside text-lg text-gray-500 mt-2 space-y-2">
-        <li>En <strong>'2023'</strong> se muestra información de los torneos de la <strong>Kings League</strong>, sobre el 1, 2 split, Kings Cup y Kingdom Cup.</li>
-        <li>En <strong>'2024'</strong> se muestra información de los torneos de la <strong>Kings League</strong>, sobre el 4 y 5 split.</li>
-        <li>En <strong>'Combinado'</strong> se muestra la información de todos los torneos de la <strong>Kings</strong>.</li>
-        <li>En <strong>'Solo Splits'</strong> se muestra la información de todos los Splits de la <strong>Kings</strong>.</li>
-      </ul>
+        <ul class="list-disc list-inside text-lg text-gray-500 mt-2 space-y-2">
+          <li>En <strong>'2023'</strong> se muestra información de los torneos de la <strong>Kings League</strong>, sobre el 1, 2 split, Kings Cup y Kingdom Cup.</li>
+          <li>En <strong>'2024'</strong> se muestra información de los torneos de la <strong>Kings League</strong>, sobre el 4 y 5 split.</li>
+          <li>En <strong>'Combinado'</strong> se muestra la información de todos los torneos de la <strong>Kings</strong>.</li>
+          <li>En <strong>'Solo Splits'</strong> se muestra la información de todos los Splits de la <strong>Kings</strong>.</li>
+        </ul>
 
-      <p class="text-lg text-gray-500 mt-2">Proximamente, se viene contenido muy Top!</p>
-    </div>
+        <p class="text-lg text-gray-500 mt-2">Proximamente, se viene contenido muy Top!</p>
+      </div>
 
-    <!-- Dashboard -->
-    <div id="dashboard" class="grid grid-cols-2 lg:grid-cols-2 gap-4 animate-fadeIn">
-      <!-- Estado inicial (antes de cargar datos) -->
-      <div class="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-        <div class="p-8 text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-          </svg>
-          <h3 class="text-xl font-semibold text-gray-700 mb-2">Selecciona una temporada</h3>
-          <p class="text-gray-500 mb-4">Visualiza estadísticas detalladas de los jugadores en diferentes temporadas y torneos</p>
-          <div class="flex justify-center gap-3">
-            <button onclick="loadYear('2023')" class="px-4 py-2 text-sm rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md hover:shadow-lg transition-all duration-300">
-              Cargar 2023
-            </button>
-            <button onclick="loadYear('combined')" class="px-4 py-2 text-sm rounded-lg bg-gradient-to-br from-green-500 to-green-600 text-white shadow-md hover:shadow-lg transition-all duration-300">
-              Todos los torneos
-            </button>
+      <div id="dashboard" class="grid grid-cols-2 lg:grid-cols-2 gap-4 animate-fadeIn">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+          <div class="p-8 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            <h2 class="text-xl font-semibold text-gray-700 mb-2">Selecciona una temporada</h2>
+            <p class="text-gray-500 mb-4">Visualiza estadísticas detalladas de los jugadores en diferentes temporadas y torneos</p>
+            <div class="flex justify-center gap-3">
+              <button onclick="loadYear('2023')" class="px-4 py-2 text-sm rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md hover:shadow-lg transition-all duration-300" aria-label="Cargar estadísticas de 2023">
+                Cargar 2023
+              </button>
+              <button onclick="loadYear('combined')" class="px-4 py-2 text-sm rounded-lg bg-gradient-to-br from-green-500 to-green-600 text-white shadow-md hover:shadow-lg transition-all duration-300" aria-label="Cargar todos los torneos">
+                Todos los torneos
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </main>
 
-    <!-- Footer -->
     <footer class="mt-12 pt-8 border-t border-gray-200 text-center text-sm text-gray-600 bg-white">
       <h2 class="text-xl font-semibold mb-4">Acerca de este sitio</h2>
       <p class="max-w-xl mx-auto mb-4 px-4">
@@ -250,597 +193,18 @@
       </p>
 
       <div class="flex justify-center flex-wrap gap-4 mb-6">
-        <a href="https://www.kingsleague.pro/" target="_blank" class="hover:text-blue-600 transition">Página oficial</a>
-        <a href="https://www.kingsleague.pro/faq" target="_blank" class="hover:text-blue-600 transition">FAQ</a>
-        <a href="https://www.kingsleague.pro/contact" target="_blank" class="hover:text-blue-600 transition">Contacto</a>
+        <a href="https://www.kingsleague.pro/" target="_blank" class="hover:text-blue-600 transition" aria-label="Página oficial de Kings League (se abre en nueva ventana)">Página oficial</a>
+        <a href="https://www.kingsleague.pro/faq" target="_blank" class="hover:text-blue-600 transition" aria-label="Preguntas frecuentes (se abre en nueva ventana)">FAQ</a>
+        <a href="https://www.kingsleague.pro/contact" target="_blank" class="hover:text-blue-600 transition" aria-label="Contacto (se abre en nueva ventana)">Contacto</a>
       </div>
 
       <p class="mb-2 text-xs">
-        Este proyecto utiliza la librería <a href="https://ml5js.org" target="_blank" class="text-blue-500 hover:underline">ml5.js</a>, una herramienta de código abierto desarrollada por la comunidad de NYU ITP/IMA y NYU Shanghai.
+        Este proyecto utiliza la librería <a href="https://ml5js.org" target="_blank" class="text-blue-500 hover:underline" aria-label="ml5.js (se abre en nueva ventana)">ml5.js</a>, una herramienta de código abierto desarrollada por la comunidad de NYU ITP/IMA y NYU Shanghai.
       </p>
 
       <p class="text-xs">Datos estadísticos de la Kings League ©2025</p>
-      <p class="mt-1 text-xs">Desarrollado con <span class="text-red-500">♥</span> para los fans del fútbol</p>
+      <p class="mt-1 text-xs">Desarrollado con <span class="text-red-500" aria-hidden="true">♥</span> para los fans del fútbol</p>
     </footer>
   </div>
-
-  <script>
-    // 1. Normalización de nombres con validación
-    const cleanName = name => {
-      if (!name || typeof name !== 'string') return '';
-      return name.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    };
-
-    // 2. Variables para almacenar datos
-    const playerStats = {};
-    const tournamentStats = {};
-
-    // 3. Configuración de archivos por año
-    const fileSets = {
-      "2023": [
-        "../json/2023_2024/passing/1_split_kings.csv",
-        "../json/2023_2024/passing/2_split_kings.csv", 
-        "../json/2023_2024/passing/3_split_kings.csv",
-      ],
-      "2024": [
-        "../json/2024_2025/passing/4_split_kings.csv",
-        "../json/2024_2025/passing/5_split_kings.csv"
-      ]
-    };
-    fileSets["combined"] = [...fileSets["2023"], ...fileSets["2024"]];
-    fileSets["splits-only"] = fileSets["2023"].slice(0, 3).concat(fileSets["2024"]);
-
-    // 4. Función para procesar datos en chunks
-    function processInChunks(data, chunkSize, callback) {
-      if (!data || !Array.isArray(data)) return;
-      
-      for (let i = 0; i < data.length; i += chunkSize) {
-        const chunk = data.slice(i, i + chunkSize);
-        callback(chunk);
-      }
-    }
-
-    // 5. Procesamiento de datos de pases
-    function processData(file, data) {
-      return new Promise((resolve) => {
-        if (!data || !Array.isArray(data)) {
-          console.error("Datos no válidos para el archivo:", file);
-          resolve([]);
-          return;
-        }
-
-        const tournamentName = file.split('/').pop().replace('.csv', '').replace(/_/g, ' ');
-        
-        if (!tournamentStats[tournamentName]) {
-          tournamentStats[tournamentName] = {
-            totalAssists: 0,
-            totalKeyPasses: 0,
-            players: new Set(),
-            teams: new Set()
-          };
-        }
-
-        const localPlayerStats = {};
-        const validRows = data.filter(row => row && row["Name"] && row["Team"]);
-
-        processInChunks(validRows, 100, (chunk) => {
-          chunk.forEach(row => {
-            try {
-              const name = cleanName(row["Name"]);
-              const team = row["Team"].trim();
-              
-              if (!name || !team) return;
-
-              const matches = parseInt(row["PM"]) || 0;
-              const assists = parseInt(row["Assist"]) || 0;
-              const keyPasses = parseInt(row["KeyP"]) || 0;
-
-              // Actualizar estadísticas del torneo
-              tournamentStats[tournamentName].totalAssists += assists;
-              tournamentStats[tournamentName].totalKeyPasses += keyPasses;
-              tournamentStats[tournamentName].players.add(name);
-              tournamentStats[tournamentName].teams.add(team);
-
-              // Inicializar jugador si no existe
-              if (!localPlayerStats[name]) {
-                localPlayerStats[name] = {
-                  name: row["Name"].trim(),
-                  teams: new Set(),
-                  matches: 0,
-                  assists: 0,
-                  keyPasses: 0,
-                  timeline: []
-                };
-              }
-
-              // Actualizar estadísticas del jugador
-              localPlayerStats[name].teams.add(team);
-              localPlayerStats[name].matches += matches;
-              localPlayerStats[name].assists += assists;
-              localPlayerStats[name].keyPasses += keyPasses;
-              localPlayerStats[name].timeline.push({
-                torneo: tournamentName,
-                matches: matches,
-                assists: assists,
-                keyPasses: keyPasses
-              });
-            } catch (error) {
-              console.error("Error procesando fila:", row, error);
-            }
-          });
-        });
-
-        resolve(Object.values(localPlayerStats));
-      });
-    }
-
-    // 6. Explicación de jugador para tooltips
-    function explainPlayer(p) {
-      if (!p || !p.name) return '<div>Datos del jugador no disponibles</div>';
-      
-      const totalMatches = p.matches || 1;
-      const teams = Array.from(p.teams || []).join(", ");
-
-      let html = `<div style="max-width: 500px;">`;
-      html += `<strong>${p.name}</strong><br>`;
-      if (teams) html += `<strong>Equipos:</strong> ${teams}<br>`;
-      html += `<strong>Partidos jugados:</strong> ${p.matches || 0}<br>`;
-      html += `<strong>Asistencias:</strong> ${p.assists || 0} (${((p.assists || 0)/totalMatches).toFixed(2)} por partido)<br>`;
-      html += `<strong>Pases clave:</strong> ${p.keyPasses || 0} (${((p.keyPasses || 0)/totalMatches).toFixed(2)} por partido)<br>`;
-      
-      if (p.timeline?.length > 1) {
-        html += `<br><u>Rendimiento por torneo:</u><br>`;
-        p.timeline.forEach(t => {
-          html += `• ${t.torneo}: ${t.assists || 0} asistencias, ${t.keyPasses || 0} pases clave (${t.matches || 0} partidos)<br>`;
-        });
-      }
-
-      html += `</div>`;
-      return html;
-    }
-
-    // 7. Gráficos básicos
-    function drawBasicCharts(players) {
-      const categories = [
-        { key: 'assists', label: 'Asistencias', color: '#60A5FA' },
-        { key: 'keyPasses', label: 'Pases Clave', color: '#F59E0B' },
-        { key: 'matches', label: 'Partidos Jugados', color: '#10B981' }
-      ];
-
-      categories.forEach(cat => {
-        const top = [...players].filter(p => p[cat.key] > 0)
-          .sort((a, b) => b[cat.key] - a[cat.key])
-          .slice(0, 10);
-        
-        const chartDiv = document.createElement("div");
-        chartDiv.className = "bg-white rounded shadow p-4";
-        chartDiv.style.height = "400px";
-        document.getElementById("dashboard").appendChild(chartDiv);
-        
-        const chart = echarts.init(chartDiv);
-        chart.setOption({
-          title: { text: `Top 10 - ${cat.label}`, left: 'center' },
-          tooltip: {
-            formatter: params => {
-              const player = players.find(p => p.name === params.name);
-              return explainPlayer(player);
-            }
-          },
-          xAxis: {
-            type: 'category',
-            data: top.map(p => p.name),
-            axisLabel: { rotate: 30 }
-          },
-          yAxis: { type: 'value' },
-          series: [{
-            data: top.map(p => p[cat.key]),
-            type: 'bar',
-            itemStyle: { color: cat.color }
-          }]
-        });
-      });
-
-      // Gráfico de correlación entre asistencias y pases clave
-      const scatterDiv = document.createElement("div");
-      scatterDiv.className = "bg-white rounded shadow p-4 col-span-2";
-      scatterDiv.style.height = "500px";
-      document.getElementById("dashboard").appendChild(scatterDiv);
-
-      const scatterChart = echarts.init(scatterDiv);
-      scatterChart.setOption({
-        title: { text: 'Correlación entre Asistencias y Pases Clave', left: 'center' },
-        tooltip: {
-          formatter: params => {
-            const player = players.find(p => p.name === params.data[2]);
-            return explainPlayer(player);
-          }
-        },
-        xAxis: { name: 'Asistencias', type: 'value' },
-        yAxis: { name: 'Pases Clave', type: 'value' },
-        series: [{
-          data: players.map(p => [p.assists, p.keyPasses, p.name]),
-          type: 'scatter',
-          symbolSize: function(data) {
-            return Math.sqrt(data[0] + data[1]) * 2;
-          },
-          itemStyle: {
-            color: function(params) {
-              const ratio = params.data[1] / (params.data[0] || 1);
-              return ratio > 2 ? '#FF6384' : ratio > 1 ? '#36A2EB' : '#FFCE56';
-            }
-          }
-        }]
-      });
-    }
-
-    // 8. Modelo de Machine Learning para predicción (continuación)
-    async function runAdvancedML(players) {
-      const tfDiv = document.createElement("div");
-      tfDiv.className = "bg-white rounded shadow p-4 col-span-2";
-      tfDiv.innerHTML = '<h3 class="text-lg font-semibold mb-2">Predicción de Rendimiento en Pases</h3>';
-      document.getElementById("dashboard").appendChild(tfDiv);
-
-      try {
-        await tf.ready();
-        const filteredPlayers = players.filter(p => p.matches > 0);
-        
-        // Normalizar datos
-        const maxMatches = Math.max(...filteredPlayers.map(p => p.matches));
-        const maxAssists = Math.max(...filteredPlayers.map(p => p.assists));
-        const maxKeyPasses = Math.max(...filteredPlayers.map(p => p.keyPasses));
-
-        const features = filteredPlayers.map(p => [
-          p.matches / maxMatches,
-          p.assists / maxAssists,
-          p.keyPasses / maxKeyPasses
-        ]);
-        
-        const labels = filteredPlayers.map(p => [
-          (p.assists * 0.7 + p.keyPasses * 0.3) / Math.max(p.matches, 1) // Puntuación ponderada
-        ]);
-
-        const xs = tf.tensor2d(features);
-        const ys = tf.tensor2d(labels);
-        
-        // Modelo
-        const model = tf.sequential();
-        model.add(tf.layers.dense({ units: 8, activation: 'relu', inputShape: [3] }));
-        model.add(tf.layers.dense({ units: 4, activation: 'relu' }));
-        model.add(tf.layers.dense({ units: 1 }));
-        model.compile({ optimizer: 'adam', loss: 'meanSquaredError' });
-
-        await model.fit(xs, ys, { epochs: 20, batchSize: 8 });
-        
-        // Predicciones para jugadores destacados
-        const topPlayers = [...filteredPlayers]
-          .sort((a, b) => (b.assists + b.keyPasses) - (a.assists + a.keyPasses))
-          .slice(0, 5);
-
-        topPlayers.forEach(p => {
-          const input = tf.tensor2d([[
-            p.matches / maxMatches,
-            p.assists / maxAssists,
-            p.keyPasses / maxKeyPasses
-          ]]);
-          
-          const prediction = model.predict(input).dataSync()[0] * 100;
-          
-          let interpretation = "";
-          if (prediction >= 80) interpretation = "🎯 Asistente excepcional";
-          else if (prediction >= 60) interpretation = "👌 Excelente creador de juego";
-          else if (prediction >= 40) interpretation = "⚽ Buen pasador";
-          else if (prediction >= 20) interpretation = "🔄 Jugador promedio";
-          else interpretation = "⚠️ Poco contribuyente en pases";
-
-          const predictionElement = document.createElement("div");
-          predictionElement.className = "mb-2 p-2 bg-blue-50 rounded";
-          predictionElement.innerHTML = `
-            <p><strong>${p.name}</strong>: Puntuación de creación ${prediction.toFixed(1)}/100</p>
-            <p class="text-sm text-gray-700">${interpretation}</p>
-          `;
-          tfDiv.appendChild(predictionElement);
-        });
-      } catch (error) {
-        console.error("Error en TensorFlow:", error);
-        tfDiv.innerHTML += '<p class="text-red-500">Error al procesar el modelo predictivo</p>';
-      }
-
-      // Explicación del modelo
-      const explanationDiv = document.createElement("div");
-      explanationDiv.className = "mt-4 p-4 bg-gray-50 rounded";
-      explanationDiv.innerHTML = `
-        <p class="text-sm text-gray-600 mb-2">El modelo considera:</p>
-        <ul class="text-sm text-gray-600 list-disc pl-5">
-          <li>Asistencias (70% de peso)</li>
-          <li>Pases clave (30% de peso)</li>
-          <li>Partidos jugados (para normalizar)</li>
-        </ul>
-      `;
-      tfDiv.appendChild(explanationDiv);
-    }
-
-    // 9. Clustering de jugadores por estilo de pase
-    function clusterPlayers(players) {
-      const clusterDiv = document.createElement("div");
-      clusterDiv.className = "bg-white rounded shadow p-4 col-span-2";
-      clusterDiv.innerHTML = '<h3 class="text-lg font-semibold mb-2">Agrupación de Jugadores por Estilo de Pase</h3>';
-      document.getElementById("dashboard").appendChild(clusterDiv);
-
-      try {
-        // Preparar datos para clustering
-        const data = players
-          .filter(p => p.assists + p.keyPasses > 0)
-          .map(p => ({
-            name: p.name,
-            features: [
-              p.assists / Math.max(p.matches, 1), // Asistencias por partido
-              p.keyPasses / Math.max(p.matches, 1), // Pases clave por partido
-              p.assists / (p.assists + p.keyPasses || 1) // Ratio asistencias/pases
-            ],
-            total: p.assists + p.keyPasses
-          }));
-
-        // K-Means clustering (simplificado)
-        const k = 3;
-        const centroids = [];
-        for (let i = 0; i < k; i++) {
-          centroids.push(data[Math.floor(Math.random() * data.length)].features);
-        }
-
-        // Asignar clusters
-        const clusteredData = data.map(d => {
-          let minDist = Infinity;
-          let cluster = 0;
-
-          centroids.forEach((c, i) => {
-            const dist = Math.sqrt(
-              Math.pow(d.features[0] - c[0], 2) +
-              Math.pow(d.features[1] - c[1], 2) +
-              Math.pow(d.features[2] - c[2], 2)
-            );
-            if (dist < minDist) {
-              minDist = dist;
-              cluster = i;
-            }
-          });
-
-          return { ...d, cluster };
-        });
-
-        // Visualizar clusters
-        const clusterGroups = {};
-        clusteredData.forEach(d => {
-          if (!clusterGroups[d.cluster]) {
-            clusterGroups[d.cluster] = [];
-          }
-          clusterGroups[d.cluster].push(d);
-        });
-
-        Object.entries(clusterGroups).forEach(([cluster, players]) => {
-          const clusterElement = document.createElement("div");
-          clusterElement.className = "mb-4 p-3 bg-gray-50 rounded";
-          
-          // Descripción del cluster
-          const avgAssists = players.reduce((sum, p) => sum + p.features[0], 0) / players.length;
-          const avgKeyPasses = players.reduce((sum, p) => sum + p.features[1], 0) / players.length;
-          const avgRatio = players.reduce((sum, p) => sum + p.features[2], 0) / players.length;
-
-          let clusterType = "";
-          if (avgRatio > 0.6) clusterType = "Asistentes puros";
-          else if (avgRatio > 0.4) clusterType = "Creadores equilibrados";
-          else clusterType = "Generadores de juego (más pases clave)";
-
-          clusterElement.innerHTML = `
-            <h4 class="font-semibold mb-2">Grupo ${parseInt(cluster) + 1}: ${clusterType} (${players.length} jugadores)</h4>
-            <div class="text-xs mb-2 p-2 bg-white rounded">
-              <p><strong>Promedio por partido:</strong></p>
-              <p>Asistencias: ${avgAssists.toFixed(2)}</p>
-              <p>Pases clave: ${avgKeyPasses.toFixed(2)}</p>
-              <p>Ratio asistencias: ${(avgRatio * 100).toFixed(1)}%</p>
-            </div>
-          `;
-
-          // Top jugadores del cluster
-          const topPlayers = [...players].sort((a, b) => b.total - a.total).slice(0, 5);
-          topPlayers.forEach(p => {
-            const playerElement = document.createElement("div");
-            playerElement.className = "text-sm mb-1";
-            playerElement.textContent = `${p.name}: ${p.total} contribuciones (${p.features[0].toFixed(2)} A, ${p.features[1].toFixed(2)} PC)`;
-            clusterElement.appendChild(playerElement);
-          });
-
-          clusterDiv.appendChild(clusterElement);
-        });
-      } catch (error) {
-        console.error("Error en clustering:", error);
-        clusterDiv.innerHTML += '<p class="text-red-500">Error al agrupar jugadores</p>';
-      }
-    }
-
-    // 10. Generación de narrativa
-    function generateStorytelling(players, tournaments) {
-      const storyDiv = document.createElement("div");
-      storyDiv.className = "bg-white rounded shadow p-4 col-span-2";
-      storyDiv.innerHTML = '<h3 class="text-lg font-semibold mb-2">Análisis de Pases en la Kings League</h3>';
-      document.getElementById("dashboard").appendChild(storyDiv);
-
-      // Top asistentes
-      const topAssisters = [...players].sort((a, b) => b.assists - a.assists).slice(0, 3);
-      
-      // Top creadores (asistencias + pases clave)
-      const topCreators = [...players].sort((a, b) => (b.assists + b.keyPasses) - (a.assists + a.keyPasses)).slice(0, 3);
-      
-      // Torneo con más pases clave
-      const topTournament = Object.entries(tournaments).sort((a, b) => b[1].totalKeyPasses - a[1].totalKeyPasses)[0];
-
-      // Construir la narrativa
-      let story = `<div class="prose max-w-none">`;
-      
-      story += `<h4 class="font-semibold text-blue-800">Resumen de la Temporada</h4>`;
-      story += `<p>En un emocionante torneo que contó con ${Object.keys(tournaments).length} competiciones distintas, `;
-      story += `los jugadores demostraron su visión de juego con un total de ${Object.values(tournaments).reduce((sum, t) => sum + t.totalAssists, 0)} asistencias y `;
-      story += `${Object.values(tournaments).reduce((sum, t) => sum + t.totalKeyPasses, 0)} pases clave. `;
-      story += `El torneo con más creatividad fue <strong>${topTournament[0]}</strong> con ${topTournament[1].totalKeyPasses} pases clave.</p>`;
-      
-      story += `<h4 class="font-semibold text-blue-800 mt-4">Los Mejores Asistentes</h4>`;
-      topAssisters.forEach((p, i) => {
-        story += `<p>${i+1}. <strong>${p.name}</strong> lidera la tabla con ${p.assists} asistencias (${(p.assists/p.matches).toFixed(2)} por partido) `;
-        story += `y ${p.keyPasses} pases clave. Un rendimiento destacado con ${Array.from(p.teams).join(" y ")}.</p>`;
-      });
-      
-      story += `<h4 class="font-semibold text-blue-800 mt-4">Los Creadores de Juego Más Completos</h4>`;
-      topCreators.forEach((p, i) => {
-        story += `<p>${i+1}. <strong>${p.name}</strong> con ${p.assists + p.keyPasses} contribuciones ofensivas `;
-        story += `(${p.assists} asistencias + ${p.keyPasses} pases clave). `;
-        story += `Un jugador clave para desequilibrar defensas.</p>`;
-      });
-      
-      story += `<h4 class="font-semibold text-blue-800 mt-4">Estadísticas Destacadas</h4>`;
-      story += `<ul class="list-disc pl-5">`;
-      story += `<li>Total de jugadores con al menos 1 asistencia: ${players.filter(p => p.assists > 0).length}</li>`;
-      story += `<li>Jugadores con más de 5 pases clave por partido: ${players.filter(p => p.keyPasses/p.matches > 5).length}</li>`;
-      story += `<li>Ratio asistencias por pases clave: ${(Object.values(tournaments).reduce((sum, t) => sum + t.totalAssists, 0) / Object.values(tournaments).reduce((sum, t) => sum + t.totalKeyPasses, 1)).toFixed(2)}</li>`;
-      story += `</ul>`;
-      
-      story += `</div>`;
-      
-      storyDiv.innerHTML += story;
-    }
-
-    // 11. Función para mostrar errores
-    function showError(message) {
-      const errorDiv = document.createElement("div");
-      errorDiv.className = "bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 col-span-2";
-      errorDiv.innerHTML = `
-        <p class="font-bold">Error</p>
-        <p>${message}</p>
-      `;
-      document.getElementById("dashboard").appendChild(errorDiv);
-    }
-
-    // 12. Función principal para cargar datos
-    let isLoading = false;
-      
-    function loadYear(year) {
-      if (isLoading) return;
-      
-      document.getElementById("loading").classList.remove("hidden");
-      document.getElementById("dashboard").innerHTML = '';
-      isLoading = true;
-
-      // Resetear estadísticas
-      Object.keys(playerStats).forEach(key => delete playerStats[key]);
-      Object.keys(tournamentStats).forEach(key => delete tournamentStats[key]);
-
-      const files = fileSets[year];
-      if (!files || files.length === 0) {
-        console.error("No hay archivos para el año seleccionado:", year);
-        showError("No se encontraron datos para la temporada seleccionada");
-        document.getElementById("loading").classList.add("hidden");
-        isLoading = false;
-        return;
-      }
-
-      // Configurar progreso
-      document.getElementById("fileCount").textContent = `0/${files.length} archivos`;
-      document.getElementById("progressBar").style.width = '0%';
-      document.getElementById("progressText").textContent = '0%';
-
-      const promises = files.map((file, index) => 
-        new Promise((resolve) => {
-          Papa.parse(file, {
-            download: true,
-            header: true,
-            complete: (results) => {
-              try {
-                document.getElementById("fileCount").textContent = `${index + 1}/${files.length} archivos`;
-                document.getElementById("progressBar").style.width = `${((index + 1) / files.length) * 100}%`;
-                document.getElementById("progressText").textContent = `${Math.round(((index + 1) / files.length) * 100)}%`;
-                
-                processData(file, results.data)
-                  .then(resolve)
-                  .catch(error => {
-                    console.error(`Error procesando archivo ${file}:`, error);
-                    resolve([]); // Resolver con array vacío para continuar
-                  });
-              } catch (error) {
-                console.error(`Error en complete callback para ${file}:`, error);
-                resolve([]);
-              }
-            },
-            error: (error) => {
-              console.error(`Error al parsear ${file}:`, error);
-              resolve([]);
-            }
-          });
-        })
-      );
-
-      Promise.all(promises)
-        .then(results => {
-          try {
-            const allPlayers = results.flat();
-            const mergedPlayers = {};
-
-            allPlayers.forEach(player => {
-              if (!player?.name) return;
-              
-              const name = cleanName(player.name);
-              if (!name) return;
-
-              if (!mergedPlayers[name]) {
-                mergedPlayers[name] = {
-                  ...player,
-                  teams: new Set(player.teams || []),
-                  timeline: [...(player.timeline || [])]
-                };
-              } else {
-                mergedPlayers[name].matches += player.matches || 0;
-                mergedPlayers[name].assists += player.assists || 0;
-                mergedPlayers[name].keyPasses += player.keyPasses || 0;
-                (player.teams || []).forEach(t => mergedPlayers[name].teams.add(t));
-                (player.timeline || []).forEach(t => mergedPlayers[name].timeline.push(t));
-              }
-            });
-
-            const playersArray = Object.values(mergedPlayers).map(p => ({
-              ...p,
-              team: Array.from(p.teams || []).join(", ")
-            }));
-
-            // Generar visualizaciones solo si hay datos
-            if (playersArray.length > 0) {
-              drawBasicCharts(playersArray);
-              runAdvancedML(playersArray);
-              clusterPlayers(playersArray);
-              generateStorytelling(playersArray, tournamentStats);
-            } else {
-              showError("No se encontraron datos válidos para mostrar");
-            }
-          } catch (error) {
-            console.error("Error al procesar resultados:", error);
-            showError("Error al procesar los datos");
-          } finally {
-            document.getElementById("loading").classList.add("hidden");
-            isLoading = false;
-          }
-        })
-        .catch(error => {
-          console.error("Error en Promise.all:", error);
-          showError("Error al cargar los datos");
-          document.getElementById("loading").classList.add("hidden");
-          isLoading = false;
-        });
-    }
-
-    // 13. Cargar datos iniciales
-    document.addEventListener("DOMContentLoaded", function() {
-      if (fileSets && fileSets['2023']) {
-        loadYear('2023');
-      } else {
-        showError("No se pudieron cargar los archivos de datos");
-      }
-    });
-  </script>
 </body>
 </html>

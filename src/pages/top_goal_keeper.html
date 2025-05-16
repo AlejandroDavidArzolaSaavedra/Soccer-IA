@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" dir="ltr">
 <head>
   <meta charset="UTF-8" />
-  <title>Mercato Kings - Estadísticas Porteros</title>
-  <meta name="description" content="Dashboard visual e interactivo con estadísticas avanzadas de porteros de la Kings League Mercato.">
-  <meta name="keywords" content="Kings League, Mercato, estadísticas, porteros, paradas, goles encajados, penaltis, fútbol, visualización de datos">
+  <title>Estadísticas de Porteros - Kings League Mercato | Análisis Avanzado</title>
+  <meta name="description" content="Dashboard interactivo con estadísticas detalladas de porteros de la Kings League: paradas, goles encajados, efectividad y más indicadores clave.">
+  <meta name="keywords" content="Kings League, estadísticas porteros, análisis porteros, paradas, goles encajados, efectividad portería, fútbol datos">
   <meta name="author" content="Alejandro David Arzola Saavedra">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta name="theme-color" content="#8E0303">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://tu-sitio.com/top_goal_keeper" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -18,86 +22,50 @@
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.16.0/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/brain.js@2.0.0-beta.2/dist/brain-browser.min.js"></script>
   <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+  <script src="../js/top_goal_keeper.js" type="module" defer></script>
+  <link rel="stylesheet" href="../css/top_goal_keeper.css">
 </head>
 
-<style>
-    .card-tilted {
-      transform: rotateX(75deg) translateY(-50px) translateZ(-50px);
-      transition: transform 0.6s, box-shadow 0.6s;
-      }
-    .card-tilted:hover {
-      transform: rotateX(0deg);
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    }
-     @keyframes shine {
-    0% {
-      transform: translateX(-100%) rotate(1deg);
-    }
-    100% {
-      transform: translateX(100%) rotate(1deg);
-    }
-  }
-
-  .shine-effect::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 150%;
-    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.6), transparent 70%);
-    transform: translateX(-100%) rotate(12deg);
-    animation: shine 2s linear infinite;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .card-tilted:hover .shine-effect::before {
-    opacity: 1;
-  }
-  #tooltip {
-  pointer-events: none;
-  white-space: normal;
-}
-  </style>
-<audio id="miAudio" src="../assets/goal_keeper.mp3"></audio>
+<audio id="miAudio" src="../assets/goal_keeper.mp3" aria-label="Efecto de sonido de parada de portero"></audio>
 
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 text-gray-800 min-h-screen p-6">
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:px-4 focus:py-2 focus:bg-white focus:text-gray-800 focus:rounded-lg focus:z-50">
+    Saltar al contenido principal
+  </a>
+    
   <div class="max-w-7xl mx-auto">
-    <!-- Header con logo y título -->
     <header class="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
-      <a href="../index.html">
-      <div class="flex items-center gap-3">
-          <img src="../assets/kingsIA.svg" alt="Logo Kings League" style="width: 6rem">
-        <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r"  style="color: #8E0303;">
-          Estadísticas de Porteros <span class="block text-xl text-gray-600">Kings League Mercato</span>
-        </h1>
-      </div>
+      <a href="../index.html" aria-label="Volver a la página principal de Mercato Kings">
+        <div class="flex items-center gap-3">
+          <img src="../assets/kingsIA.svg" alt="Logo Kings League - Estadísticas oficiales" style="width: 6rem" width="96" height="96" loading="lazy">
+          <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r" style="color: #8E0303;">
+            Estadísticas de Porteros <span class="block text-xl text-gray-600">Kings League Mercato</span>
+          </h1>
+        </div>
       </a>
 
       <div class="flex items-center gap-2">
-        <div class="flex gap-2 flex-wrap justify-center">
-          <button onclick="loadYear('2023')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="flex gap-2 flex-wrap justify-center" role="group" aria-label="Filtros de temporada para estadísticas de porteros">
+          <button onclick="loadYear('2023')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Mostrar estadísticas de porteros del año 2023" aria-pressed="false" data-year="2023">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             2023
           </button>
-          <button onclick="loadYear('2024')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button onclick="loadYear('2024')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Mostrar estadísticas de porteros del año 2024" aria-pressed="false" data-year="2024">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             2024
           </button>
-          <button onclick="loadYear('combined')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button onclick="loadYear('combined')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Mostrar estadísticas combinadas de porteros de todos los años" aria-pressed="false" data-year="combined">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
             Combinado
           </button>
-          <button onclick="loadYear('splits-only')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1"  style="background-color: #8E0303; font-weight: bold;">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button onclick="loadYear('splits-only')" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Mostrar solo estadísticas de porteros por splits" aria-pressed="false" data-year="splits-only">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
             Solo Splits
@@ -106,897 +74,164 @@
       </div>
     </header>
 
-    <!-- Loading spinner mejorado -->
-    <div id="loading" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4">
+    <div id="loading" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 backdrop-blur-sm" role="status" aria-live="polite" aria-busy="true">
+      <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4" role="alertdialog" aria-modal="true" aria-labelledby="loadingTitle" aria-describedby="loadingDesc">
         <div class="flex items-center gap-4 mb-4">
-          <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+          <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500" aria-hidden="true"></div>
           <div>
-            <p class="text-lg font-semibold text-gray-800">Procesando datos...</p>
-            <p class="text-sm text-gray-500" id="loadingText">Cargando archivos de estadísticas</p>
+            <h3 id="loadingTitle" class="text-lg font-semibold text-gray-800">Procesando datos de porteros...</h3>
+            <p id="loadingDesc" class="text-sm text-gray-500">Cargando archivos de estadísticas de portería</p>
           </div>
         </div>
         <div class="w-full bg-gray-200 rounded-full h-2.5">
-          <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-purple-600 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
+          <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-purple-600 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 0%" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-labelledby="progressLabel">
+            <span id="progressLabel" class="sr-only">Progreso de carga de datos</span>
+          </div>
         </div>
         <div class="mt-2 flex justify-between text-xs text-gray-500">
-          <span id="progressText">0%</span>
-          <span id="fileCount">0/0 archivos</span>
+          <span id="progressText" aria-live="polite">0% completado</span>
+          <span id="fileCount">0/0 archivos procesados</span>
         </div>
       </div>
     </div>
 
-    <nav class="flex gap-2 flex-wrap justify-center mb-4">
-      <a href="./goals.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <nav class="flex gap-2 flex-wrap justify-center mb-4" aria-label="Menú de estadísticas">
+      <a href="./goals.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas de goles">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
         Goles
       </a>
-      <a href="./shots.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./shots.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas de tiros">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
         </svg>
         Tiros
       </a>
-      <a href="./passing.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./passing.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas de pases">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
         Pases
       </a>
-      <a href="./offensives.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./offensives.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas ofensivas">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
         Ofensivas
       </a>
-      <a href="./defensives.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./defensives.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas defensivas">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
         Defensivas
       </a>
-      <a href="./cards.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./cards.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas de tarjetas">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
         Tarjetas
       </a>
-      <a href="./match_MVP.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./match_MVP.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-label="Estadísticas de MVP por partido">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
         MVP Partido
       </a>
-      <a href="./top_goal_keeper.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="./top_goal_keeper.html" class="px-4 py-2 rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1" style="background-color: #8E0303; font-weight: bold;" aria-current="page" aria-label="Estadísticas de porteros (página actual)">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
         Portero
       </a>
     </nav>
 
-    <!-- Añadimos imagen de portada-->
-    <div class="relative w-full mb-8 cursor-pointer" onclick="document.getElementById('miAudio').play()" style="justify-content: center;">
-      <img src="../assets/portada_goalkeeper.png" alt="Kings League" class="w-full h-112 rounded-lg shadow-lg">
-      <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50"></div>
-      <h2 class="absolute top-4 left-4 text-white text-2xl font-bold">Estadísticas de Porteros de la Kings League</h2>
-    </div>
-    
-    <div class="mt-4 mb-8" style="display: inline-block;">
-      <p class="text-lg text-gray-500">
-        Esta plataforma recopila datos desde la 
-        <a href="https://www.kingsleague.pro/" target="_blank" class="text-blue-600 hover:underline">página oficial de la Kings League</a> 
-        y los transforma en contenido visual e interactivo. Utilizamos técnicas de análisis estadístico avanzado, visualización de datos e inteligencia artificial para ofrecer una experiencia única y enriquecedora.
-      </p>
-      <p class="text-lg text-gray-500 mt-2">
-        Ideal para entrenadores, analistas y fanáticos de la Kings League, esta herramienta permite explorar el rendimiento de los porteros de forma profesional, intuitiva y entretenida.
-      </p>
-
-      <ul class="list-disc list-inside text-lg text-gray-500 mt-2 space-y-2">
-        <li>
-          En <strong>'2023'</strong> se muestra información de los torneos de la <strong>Kings League</strong>, sobre el 1, 2 split, Kings Cup y Kingdom Cup.
-        </li>
-        <li>
-          En <strong>'2024'</strong> se muestra información de los torneos de la <strong>Kings League</strong>, sobre el 4 y 5 split.
-        </li>
-        <li>
-          En <strong>'Combinado'</strong> se muestra la información de todos los torneos de la <strong>Kings</strong>.
-        </li>
-        <li>
-          En <strong>'Solo Splits'</strong> se muestra la información de todos los Splits de la <strong>Kings</strong>.
-        </li>
-      </ul>
-
-      <p class="text-lg text-gray-500 mt-2">
-        Proximamente, se viene contenido muy Top!
-      </p>
+    <div class="relative w-full mb-8" style="justify-content: center;">
+      <button onclick="document.getElementById('miAudio').play()" class="w-full h-full absolute inset-0 z-10 cursor-pointer" aria-label="Reproducir sonido de parada de portero">
+        <span class="sr-only">Haz clic para reproducir efecto de sonido de parada</span>
+      </button>
+      <img src="../assets/portada_goalkeeper.png" alt="Portero de la Kings League realizando una parada espectacular" class="w-full h-112 rounded-lg shadow-lg" width="1200" height="448" loading="eager">
+      <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50" aria-hidden="true"></div>
+      <h2 class="absolute top-4 left-4 text-white text-2xl font-bold">Estadísticas de Porteros - Kings League Mercato</h2>
     </div>
 
-    <!-- Dashboard con mejor espaciado -->
-    <div id="dashboard" class="grid grid-cols-2 lg:grid-cols-2 gap-4 animate-fadeIn">
-      <!-- Estado inicial (antes de cargar datos) -->
-      <div class="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-        <div class="p-8 text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-          </svg>
-          <h3 class="text-xl font-semibold text-gray-700 mb-2">Selecciona una temporada</h3>
-          <p class="text-gray-500 mb-4">Visualiza estadísticas detalladas de los porteros en diferentes temporadas y torneos</p>
-          <div class="flex justify-center gap-3">
-            <button onclick="loadYear('2023')" class="px-4 py-2 text-sm rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md hover:shadow-lg transition-all duration-300">
-              Cargar 2023
-            </button>
-            <button onclick="loadYear('combined')" class="px-4 py-2 text-sm rounded-lg bg-gradient-to-br from-green-500 to-green-600 text-white shadow-md hover:shadow-lg transition-all duration-300">
-              Todos los torneos
-            </button>
+    <main id="main-content" tabindex="-1">
+      <section aria-labelledby="info-heading">
+        <h2 id="info-heading" class="sr-only">Información sobre las estadísticas de porteros</h2>
+        <div class="mt-4 mb-8" style="display: inline-block;">
+          <p class="text-lg text-gray-500">
+            Esta plataforma recopila datos desde la 
+            <a href="https://www.kingsleague.pro/" target="_blank" class="text-blue-600 hover:underline" rel="noopener noreferrer" aria-label="Página oficial de la Kings League (se abre en nueva ventana)">página oficial de la Kings League</a> 
+            y los transforma en contenido visual e interactivo. Utilizamos técnicas de análisis estadístico avanzado, visualización de datos e inteligencia artificial para ofrecer una experiencia única y enriquecedora.
+          </p>
+          <p class="text-lg text-gray-500 mt-2">
+            Ideal para entrenadores, analistas y fanáticos de la Kings League, esta herramienta permite explorar el rendimiento de los porteros de forma profesional, intuitiva y entretenida.
+          </p>
+
+          <ul class="list-disc list-inside text-lg text-gray-500 mt-2 space-y-2">
+            <li>
+              En <strong>'2023'</strong> se muestra información de los torneos de la <strong>Kings League</strong>, sobre el 1, 2 split, Kings Cup y Kingdom Cup.
+            </li>
+            <li>
+              En <strong>'2024'</strong> se muestra información de los torneos de la <strong>Kings League</strong>, sobre el 4 y 5 split.
+            </li>
+            <li>
+              En <strong>'Combinado'</strong> se muestra la información de todos los torneos de la <strong>Kings</strong>.
+            </li>
+            <li>
+              En <strong>'Solo Splits'</strong> se muestra la información de todos los Splits de la <strong>Kings</strong>.
+            </li>
+          </ul>
+
+          <p class="text-lg text-gray-500 mt-2">
+            Próximamente, se viene contenido muy Top!
+          </p>
+        </div>
+      </section>
+
+      <section aria-labelledby="dashboard-heading">
+        <h2 id="dashboard-heading" class="sr-only">Panel de estadísticas de porteros</h2>
+        <div id="dashboard" class="grid grid-cols-2 lg:grid-cols-2 gap-4 animate-fadeIn">
+          <div class="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+            <div class="p-8 text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <h3 class="text-xl font-semibold text-gray-700 mb-2">Selecciona una temporada</h3>
+              <p class="text-gray-500 mb-4">Visualiza estadísticas detalladas de los porteros en diferentes temporadas y torneos</p>
+              <div class="flex justify-center gap-3">
+                <button onclick="loadYear('2023')" class="px-4 py-2 text-sm rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md hover:shadow-lg transition-all duration-300" aria-label="Cargar estadísticas de porteros del año 2023">
+                  Cargar 2023
+                </button>
+                <button onclick="loadYear('combined')" class="px-4 py-2 text-sm rounded-lg bg-gradient-to-br from-green-500 to-green-600 text-white shadow-md hover:shadow-lg transition-all duration-300" aria-label="Cargar estadísticas de porteros de todos los torneos">
+                  Todos los torneos
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
 
-    <!-- Footer -->
     <footer class="mt-12 pt-8 border-t border-gray-200 text-center text-sm text-gray-600 bg-white">
       <h2 class="text-xl font-semibold mb-4">Acerca de este sitio</h2>
       <p class="max-w-xl mx-auto mb-4 px-4">
         <strong>Mercato Kings</strong> es una plataforma independiente diseñada para compartir datos, estadísticas y análisis relevantes sobre la <strong>Kings League</strong>, con fines exclusivamente informativos e identificativos.
       </p>
 
-      <!-- Enlaces útiles -->
       <div class="flex justify-center flex-wrap gap-4 mb-6">
-        <a href="https://www.kingsleague.pro/" target="_blank" class="hover:text-blue-600 transition">Página oficial</a>
-        <a href="https://www.kingsleague.pro/faq" target="_blank" class="hover:text-blue-600 transition">FAQ</a>
-        <a href="https://www.kingsleague.pro/contact" target="_blank" class="hover:text-blue-600 transition">Contacto</a>
+        <a href="https://www.kingsleague.pro/" target="_blank" class="hover:text-blue-600 transition" rel="noopener noreferrer" aria-label="Página oficial de Kings League (se abre en nueva ventana)">Página oficial</a>
+        <a href="https://www.kingsleague.pro/faq" target="_blank" class="hover:text-blue-600 transition" rel="noopener noreferrer" aria-label="Preguntas frecuentes (se abre en nueva ventana)">FAQ</a>
+        <a href="https://www.kingsleague.pro/contact" target="_blank" class="hover:text-blue-600 transition" rel="noopener noreferrer" aria-label="Contacto con Kings League (se abre en nueva ventana)">Contacto</a>
       </div>
 
-      <!-- Créditos -->
       <p class="mb-2 text-xs">
-        Este proyecto utiliza la librería <a href="https://ml5js.org" target="_blank" class="text-blue-500 hover:underline">ml5.js</a>, una herramienta de código abierto desarrollada por la comunidad de NYU ITP/IMA y NYU Shanghai.
+        Este proyecto utiliza la librería <a href="https://ml5js.org" target="_blank" class="text-blue-500 hover:underline" rel="noopener noreferrer" aria-label="ml5.js - Machine Learning para la web (se abre en nueva ventana)">ml5.js</a>, una herramienta de código abierto desarrollada por la comunidad de NYU ITP/IMA y NYU Shanghai.
       </p>
 
       <p class="text-xs">Datos estadísticos de la Kings League ©2025</p>
-      <p class="mt-1 text-xs">Desarrollado con <span class="text-red-500">♥</span> para los fans del fútbol</p>
+      <p class="mt-1 text-xs">Desarrollado con <span class="text-red-500" aria-hidden="true">♥</span> <span class="sr-only">amor</span> para los fans del fútbol</p>
     </footer>
-
   </div>
-
-  <script>
-    // 1. Normalización de nombres
-    const cleanName = name => {
-  if (!name) return ''; // Devuelve string vacío si name es undefined/null
-  return name.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-};
-    // 2. Agregación temporal/por torneo mejorada
-    const goalkeeperStats = {};
-    const tournamentStats = {};
-
-    const fileSets = {
-      "2023": [
-        "../json/2023_2024/top_goal_keeper/1_split_kings.csv",
-        "../json/2023_2024/top_goal_keeper/2_split_kings.csv",
-        "../json/2023_2024/top_goal_keeper/3_split_kings.csv",
-        "../json/2023_2024/top_goal_keeper/kings_cup.csv",
-        "../json/2023_2024/top_goal_keeper/kingdom_cup.csv"
-      ],
-      "2024": [
-        "../json/2024_2025/top_goal_keeper/4_split_kings.csv",
-        "../json/2024_2025/top_goal_keeper/5_split_kings.csv"
-      ]
-    };
-    fileSets["combined"] = [...fileSets["2023"], ...fileSets["2024"]];
-    fileSets["splits-only"] = fileSets["2023"].slice(0, 2).concat(fileSets["2024"]);
-
-    // 5. Optimización del procesamiento con Web Worker (simulado)
-    function processInChunks(data, chunkSize, callback) {
-      const chunks = [];
-      for (let i = 0; i < data.length; i += chunkSize) {
-        chunks.push(data.slice(i, i + chunkSize));
-      }
-      
-      let processed = 0;
-      chunks.forEach((chunk, index) => {
-        setTimeout(() => {
-          callback(chunk);
-          processed++;
-          const progress = (processed / chunks.length) * 100;
-          document.getElementById('progressBar').style.width = `${progress}%`;
-        }, index * 50);
-      });
-    }
-
-    function processData(file, data) {
-  return new Promise((resolve) => {
-    const isSplit = file.includes("split");
-    const isCup = file.includes("kings_cup") || file.includes("kingdom_cup");
-    const tournamentName = file.split('/').pop().replace('.csv', '').replace(/_/g, ' ');
-
-    if (!tournamentStats[tournamentName]) {
-      tournamentStats[tournamentName] = {
-        totalSaves: 0,
-        totalGoalsConceded: 0,
-        totalPenaltiesSaved: 0,
-        totalPSOSaved: 0,
-        goalkeepers: new Set(),
-        teams: new Set()
-      };
-    }
-
-    const localGoalkeeperStats = {};
-
-    processInChunks(data, 100, (chunk) => {
-      chunk.forEach(row => {
-        const name = cleanName(row["Name"] || row["Nombre"]), 
-              team = row["Team"] || row["Equipo"];
-        if (!name || !team) return;
-
-        // Manejar ambos formatos
-        let pm, sav, gc, penR, psoR;
-        
-        if (isSplit) {
-          // Formato de splits
-          pm = parseInt(row["PM"]) || 0;
-          sav = parseInt(row["Sav."]) || 0;
-          gc = parseInt(row["GC"]) || 0;
-          penR = parseInt(row["Pen.R"]) || 0;
-          psoR = parseInt(row["PSO.R"]) || 0;
-        } else if (isCup) {
-          // Formato de copas (Kings Cup/Kingdom Cup)
-          pm = parseInt(row["Pl"]) || 0;
-          gc = parseInt(row["G.En"]) || 0;
-          // Para las copas, estimamos las paradas basadas en el ratio
-          const ratio = parseFloat(row["Ratio"]) || 2.0; // Ratio promedio si no hay dato
-          sav = Math.round(gc * ratio); // Estimación de paradas
-          // No hay datos de penaltis/PSO en este formato
-          penR = 0;
-          psoR = 0;
-        }
-
-        tournamentStats[tournamentName].totalSaves += sav;
-        tournamentStats[tournamentName].totalGoalsConceded += gc;
-        tournamentStats[tournamentName].totalPenaltiesSaved += penR;
-        tournamentStats[tournamentName].totalPSOSaved += psoR;
-        tournamentStats[tournamentName].goalkeepers.add(name);
-        tournamentStats[tournamentName].teams.add(team);
-
-        if (!localGoalkeeperStats[name]) {
-          localGoalkeeperStats[name] = {
-            name: (row["Name"] || row["Nombre"]).trim(),
-            teams: new Set(),
-            pm: 0,
-            sav: 0,
-            gc: 0,
-            penR: 0,
-            psoR: 0,
-            timeline: [],
-            isEstimated: isCup // Marcamos si los datos son estimados
-          };
-        }
-
-        localGoalkeeperStats[name].teams.add(team);
-        localGoalkeeperStats[name].pm += pm;
-        localGoalkeeperStats[name].sav += sav;
-        localGoalkeeperStats[name].gc += gc;
-        localGoalkeeperStats[name].penR += penR;
-        localGoalkeeperStats[name].psoR += psoR;
-        localGoalkeeperStats[name].timeline.push({
-          torneo: tournamentName,
-          pm: pm,
-          sav: sav,
-          gc: gc,
-          penR: penR,
-          psoR: psoR,
-          isEstimated: isCup
-        });
-      });
-
-      resolve(Object.values(localGoalkeeperStats));
-    });
-  });
-}
-
-    // 6. Explicaciones automáticas por portero
-function explainGoalkeeper(gk) {
-  const savePercentage = (gk.sav / (gk.sav + gk.gc)) * 100;
-  const savesPerMatch = (gk.sav / gk.pm).toFixed(1);
-  const goalsConcededPerMatch = (gk.gc / gk.pm).toFixed(1);
-  
-  let html = `<div style="max-width: 500px;">`;
-  html += `<strong>${gk.name}</strong>`;
-  if (gk.isEstimated) {
-    html += ` <span style="color: #EF4444; font-size: 0.8em;">(Datos estimados para copas)</span>`;
-  }
-  html += `<br>`;
-  html += `<strong>Equipos:</strong> ${Array.from(gk.teams).join(", ")}<br>`;
-  html += `<strong>Partidos jugados:</strong> ${gk.pm}<br>`;
-  html += `<strong>Paradas:</strong> ${gk.sav} (${savePercentage.toFixed(1)}% efectividad)<br>`;
-  html += `<strong>Goles encajados:</strong> ${gk.gc} (${goalsConcededPerMatch} por partido)<br>`;
-  
-  if (!gk.isEstimated) {
-    html += `<strong>Penaltis parados:</strong> ${gk.penR}<br>`;
-    html += `<strong>PSO parados:</strong> ${gk.psoR}<br>`;
-  }
-  
-  html += `<strong>Paradas por partido:</strong> ${savesPerMatch}<br><br>`;
-
-  if (gk.timeline.length > 1) {
-    html += `<u>Torneos:</u><br>`;
-    gk.timeline.forEach(t => {
-      html += `• ${t.torneo}: ${t.sav} paradas, ${t.gc} goles encajados`;
-      if (t.isEstimated) html += ` (estimado)`;
-      html += `<br>`;
-    });
-  }
-
-  html += `</div>`;
-  return html;
-}
-    // 7. Visualizaciones de correlación para porteros
-    function drawCorrelationCharts(goalkeepers) {
-      const scatterDiv = document.createElement("div");
-      scatterDiv.className = "bg-white rounded shadow mb-4 col-span-2";
-      scatterDiv.style.width = "100%";
-      scatterDiv.style.maxWidth = "1200px";
-      scatterDiv.style.margin = "0 auto";
-      scatterDiv.style.display = "grid";
-      scatterDiv.style.justifyItems = "center";
-      document.getElementById("dashboard").appendChild(scatterDiv);
-
-      const chartDiv = document.createElement("div");
-      chartDiv.style.width = "calc(10rem + 45vw)";
-      chartDiv.style.height = "50vh";
-      scatterDiv.appendChild(chartDiv);
-
-      const trace = {
-        x: goalkeepers.map(gk => gk.sav),
-        y: goalkeepers.map(gk => gk.gc),
-        mode: 'markers',
-        type: 'scatter',
-        text: goalkeepers.map(gk => gk.name),
-        marker: { size: 8 }
-      };
-
-      Plotly.newPlot(chartDiv, [trace], {
-        title: 'Correlación entre Paradas y Goles Encajados',
-        xaxis: { title: 'Paradas (Sav)' },
-        yaxis: { title: 'Goles Encajados (GC)' },
-        margin: { t: 50 }
-      });
-
-      const description = document.createElement("p");
-      description.className = "text-lg text-gray-700 mt-4 p-4";
-      description.innerText = "Este gráfico muestra la relación entre las paradas realizadas y los goles encajados por cada portero. Una correlación negativa sugeriría que los porteros con más paradas tienden a encajar menos goles.";
-      scatterDiv.appendChild(description);
-    }
-
-    // 3. Modelos ML para porteros
-    async function runAdvancedML(goalkeepers) {
-      // TensorFlow.js - Modelo para porteros
-      const tfDiv = document.createElement("div");
-      tfDiv.className = "bg-white rounded shadow p-4 col-span-2";
-      tfDiv.innerHTML = '<h3 class="text-lg font-semibold mb-2">Predicción de Rendimiento para Porteros</h3>';
-      document.getElementById("dashboard").appendChild(tfDiv);
-
-      try {
-        // Preparar datos
-        await tf.ready();
-
-        const filteredGKs = goalkeepers.filter(gk => gk.pm > 0);
-        const features = filteredGKs.map(gk => [
-          gk.sav / 100,
-          gk.gc / 50,
-          gk.penR / 10,
-          gk.psoR / 5,
-          gk.pm / 30
-        ]);
-        
-        const labels = filteredGKs.map(gk => [
-          (gk.sav * 0.8 - gk.gc * 0.5 + gk.penR * 0.3 + gk.psoR * 0.4) / 50
-        ]);
-        
-        const xs = tf.tensor2d(features);
-        const ys = tf.tensor2d(labels);
-        
-        // Modelo
-        const model = tf.sequential();
-        model.add(tf.layers.dense({ units: 16, activation: 'relu', inputShape: [5] }));
-        model.add(tf.layers.dense({ units: 8, activation: 'relu' }));
-        model.add(tf.layers.dense({ units: 1 }));
-        model.compile({
-          optimizer: tf.train.adam(0.01),
-          loss: 'meanSquaredError'
-        });
-
-        await model.fit(xs, ys, {
-          epochs: 30,
-          batchSize: 8,
-          shuffle: true,
-        });
-        
-        // Predicción para porteros destacados
-        const topGKs = [...filteredGKs].sort((a, b) => b.sav - a.sav).slice(0, 3);
-        topGKs.forEach(gk => {
-          const input = tf.tensor2d([[
-            gk.sav / 100,
-            gk.gc / 50,
-            gk.penR / 10,
-            gk.psoR / 5,
-            gk.pm / 30
-          ]]);
-          
-          const prediction = model.predict(input).dataSync()[0] * 50;
-          const predictionElement = document.createElement("div");
-          predictionElement.className = "mb-2 p-2 bg-blue-50 rounded";
-          
-          let interpretacion = "";
-          if (prediction >= 80) {
-            interpretacion = "🔥 Portero excepcional";
-          } else if (prediction >= 60) {
-            interpretacion = "💪 Portero destacado";
-          } else if (prediction >= 40) {
-            interpretacion = "⚙️ Portero promedio alto";
-          } else if (prediction >= 20) {
-            interpretacion = "⚠️ Por debajo de lo esperado";
-          } else {
-            interpretacion = "❌ Rendimiento muy bajo";
-          }
-
-          predictionElement.innerHTML = `
-            <p><strong>${gk.name}</strong>: Predicción de rendimiento: ${prediction.toFixed(1)} puntos</p>
-            <p class="text-sm text-gray-700">${interpretacion}</p>
-          `;
-          tfDiv.appendChild(predictionElement);
-        });
-      } catch (error) {
-        console.error("Error en TensorFlow:", error);
-        tfDiv.innerHTML += '<p class="text-red-500">Error al procesar el modelo predictivo</p>';
-      }
-      
-      let divElement = document.createElement("div");
-      divElement.innerHTML = '<p class="text-sm text-gray-600 mb-4">Estos resultados son aproximados: la inteligencia artificial puede variar ligeramente en cada carga, pero ofrece predicciones muy similares. Su objetivo es ayudar a estimar el rendimiento de cada portero de forma objetiva. Cada rango indica la importancia y la calidad del portero.<\p>';
-      tfDiv.appendChild(divElement);
-      
-      let divElementText = document.createElement("div");
-      divElementText.innerHTML = `
-        <p class="text-sm text-gray-600 mb-4">
-          Para predecir el rendimiento de los porteros, se ajustan varias estadísticas clave a la misma escala de la siguiente manera:
-        </p>
-        <ul class="text-sm text-gray-600 mb-4">
-          <li><strong>Paradas (sav):</strong> Se dividen entre 100 para normalizar su impacto.</li>
-          <li><strong>Goles encajados (gc):</strong> Se dividen entre 50 (con peso negativo).</li>
-          <li><strong>Penaltis parados (penR):</strong> Se dividen entre 10.</li>
-          <li><strong>PSO parados (psoR):</strong> Se dividen entre 5.</li>
-          <li><strong>Partidos jugados (pm):</strong> Se dividen entre 30 para reflejar experiencia.</li>
-        </ul>
-      `;
-      tfDiv.appendChild(divElementText);
-    }
-
-    // 4. Clustering de porteros
-    function clusterPlayers(goalkeepers) {
-      const clusterDiv = document.createElement("div");
-      clusterDiv.className = "bg-white rounded shadow p-4 col-span-2";
-      clusterDiv.innerHTML = '<h3 class="text-lg font-semibold mb-2">Agrupación de Porteros por Estilo</h3>';
-      document.getElementById("dashboard").appendChild(clusterDiv);
-
-      try {
-        // Preparar datos para clustering
-        const data = goalkeepers
-          .filter(gk => gk.pm > 0)
-          .map(gk => ({
-            name: gk.name,
-            features: [gk.sav, gk.gc * -1, gk.penR * 2, gk.psoR * 2],
-            total: gk.sav - gk.gc + gk.penR * 2 + gk.psoR * 2
-          }));
-
-        // Normalizar datos
-        const maxValues = [0, 0, 0, 0];
-        data.forEach(d => {
-          d.features.forEach((f, i) => {
-            if (Math.abs(f) > maxValues[i]) maxValues[i] = Math.abs(f);
-          });
-        });
-
-        const normalizedData = data.map(d => ({
-          ...d,
-          features: d.features.map((f, i) => f / (maxValues[i] || 1))
-        }));
-
-        // K-Means clustering (simplificado)
-        const k = 3;
-        const centroids = [];
-        for (let i = 0; i < k; i++) {
-          centroids.push(normalizedData[Math.floor(Math.random() * normalizedData.length)].features);
-        }
-
-        // Asignar clusters
-        const clusteredData = normalizedData.map(d => {
-          let minDist = Infinity;
-          let cluster = 0;
-
-          centroids.forEach((c, i) => {
-            const dist = Math.sqrt(
-              Math.pow(d.features[0] - c[0], 2) +
-              Math.pow(d.features[1] - c[1], 2) +
-              Math.pow(d.features[2] - c[2], 2) +
-              Math.pow(d.features[3] - c[3], 2)
-            );
-            if (dist < minDist) {
-              minDist = dist;
-              cluster = i;
-            }
-          });
-
-          return { ...d, cluster };
-        });
-
-        // Visualizar clusters
-        const clusterGroups = {};
-        clusteredData.forEach(d => {
-          if (!clusterGroups[d.cluster]) {
-            clusterGroups[d.cluster] = [];
-          }
-          clusterGroups[d.cluster].push(d);
-        });
-
-        Object.entries(clusterGroups).forEach(([cluster, gks]) => {
-          const clusterElement = document.createElement("div");
-          clusterElement.className = "mb-4 p-3 bg-gray-50 rounded";
-          clusterElement.innerHTML = `<h4 class="font-semibold mb-2">Grupo ${parseInt(cluster) + 1} (${gks.length} porteros)</h4>`;
-
-          const sortedGKs = [...gks].sort((a, b) => b.total - a.total);
-          const topGKs = sortedGKs.slice(0, 5);
-          const restGKs = sortedGKs.slice(5);
-
-          topGKs.forEach(gk => {
-            const gkElement = document.createElement("div");
-            gkElement.className = "text-sm mb-1";
-            gkElement.textContent = `${gk.name}: ${data.find(d => d.name === gk.name).total.toFixed(1)} puntos`;
-            clusterElement.appendChild(gkElement);
-          });
-
-          if (restGKs.length > 0) {
-            const toggleBtn = document.createElement("button");
-            toggleBtn.textContent = "Ver más porteros";
-            toggleBtn.className = "text-blue-500 text-xs mt-2 hover:underline";
-            toggleBtn.style.cursor = "pointer";
-
-            const restContainer = document.createElement("div");
-            restContainer.style.display = "none";
-
-            restGKs.forEach(gk => {
-              const gkElement = document.createElement("div");
-              gkElement.className = "text-sm mb-1";
-              gkElement.textContent = `${gk.name}: ${data.find(d => d.name === gk.name).total.toFixed(1)} puntos`;
-              restContainer.appendChild(gkElement);
-            });
-
-            toggleBtn.addEventListener("click", () => {
-              const visible = restContainer.style.display === "block";
-              restContainer.style.display = visible ? "none" : "block";
-              toggleBtn.textContent = visible ? "Ver más porteros" : "Ocultar porteros";
-            });
-
-            clusterElement.appendChild(toggleBtn);
-            clusterElement.appendChild(restContainer);
-          }
-
-          // Descripción del cluster
-          const avgFeatures = [0, 0, 0, 0];
-          gks.forEach(gk => {
-            gk.features.forEach((f, i) => {
-              avgFeatures[i] += f * (maxValues[i] || 1);
-            });
-          });
-
-          avgFeatures.forEach((f, i) => avgFeatures[i] = (f / gks.length).toFixed(1));
-
-          const descElement = document.createElement("div");
-          descElement.className = "text-xs mt-2 p-2 bg-white rounded";
-          descElement.innerHTML = `
-            <p><strong>Perfil promedio:</strong></p>
-            <p>Paradas: ${avgFeatures[0]}</p>
-            <p>Goles encajados: ${-avgFeatures[1]}</p>
-            <p>Penaltis parados: ${(avgFeatures[2] / 2).toFixed(1)}</p>
-            <p>PSO parados: ${(avgFeatures[3] / 2).toFixed(1)}</p>
-          `;
-          clusterElement.appendChild(descElement);
-
-          clusterDiv.appendChild(clusterElement);
-        });
-      } catch (error) {
-        console.error("Error en clustering:", error);
-        clusterDiv.innerHTML += '<p class="text-red-500">Error al agrupar porteros</p>';
-      }
-    }
-
-    // BONUS: Storytelling automático para porteros
-    function generateStorytelling(goalkeepers, tournaments) {
-      const storyDiv = document.createElement("div");
-      storyDiv.className = "bg-white rounded shadow p-4 col-span-2";
-      storyDiv.innerHTML = '<h3 class="text-lg font-semibold mb-2">Narrativa de los Porteros de la Kings League</h3>';
-      document.getElementById("dashboard").appendChild(storyDiv);
-
-      // Top porteros por paradas
-      const topSavers = [...goalkeepers].sort((a, b) => b.sav - a.sav).slice(0, 3);
-
-      // Portero con mejor porcentaje de paradas (mínimo 5 partidos)
-      const bestSavePercentage = [...goalkeepers]
-        .filter(gk => gk.pm >= 5)
-        .sort((a, b) => (b.sav / (b.sav + b.gc)) - (a.sav / (a.sav + a.gc)))[0];
-
-      // Portero con más penaltis parados
-      const topPenaltySaver = [...goalkeepers].sort((a, b) => b.penR - a.penR)[0];
-
-      // Construir la narrativa
-      let story = `<div class="prose max-w-none">`;
-      
-      story += `<h4 class="font-semibold text-blue-800">Resumen de la Temporada</h4>`;
-      story += `<p>En un emocionante torneo que contó con ${Object.keys(tournaments).length} competiciones distintas, `;
-      story += `los porteros demostraron su calidad con un total de ${Object.values(tournaments).reduce((sum, t) => sum + t.totalSaves, 0)} paradas. `;
-      story += `Se encajaron ${Object.values(tournaments).reduce((sum, t) => sum + t.totalGoalsConceded, 0)} goles en total.</p>`;
-      
-      story += `<h4 class="font-semibold text-blue-800 mt-4">Los Porteros Estrella</h4>`;
-      topSavers.forEach((gk, i) => {
-        const savePercentage = ((gk.sav / (gk.sav + gk.gc)) * 100).toFixed(1);
-        story += `<p>${i+1}. <strong>${gk.name}</strong> lidera la tabla con ${gk.sav} paradas (${savePercentage}% efectividad), `;
-        story += `encajando ${gk.gc} goles en ${gk.pm} partidos. `;
-        story += `Además, paró ${gk.penR} penaltis y ${gk.psoR} en PSO.</p>`;
-      });
-      
-      story += `<h4 class="font-semibold text-blue-800 mt-4">El Portero Más Efectivo</h4>`;
-      story += `<p><strong>${bestSavePercentage.name}</strong> demostró ser el portero más efectivo, `;
-      story += `con un ${(bestSavePercentage.sav / (bestSavePercentage.sav + bestSavePercentage.gc) * 100).toFixed(1)}% de paradas. `;
-      story += `Un rendimiento destacado que lo convierte en un pilar fundamental para su equipo.</p>`;
-      
-      story += `<h4 class="font-semibold text-blue-800 mt-4">Especialista en Penaltis</h4>`;
-      story += `<p><strong>${topPenaltySaver.name}</strong> se consagró como el mejor parando penaltis, `;
-      story += `con un total de ${topPenaltySaver.penR} detenidos. Una habilidad clave en momentos decisivos del juego.</p>`;
-      
-      story += `<h4 class="font-semibold text-blue-800 mt-4">Estadísticas Destacadas</h4>`;
-      story += `<ul class="list-disc pl-5">`;
-      story += `<li>Total de porteros participantes: ${goalkeepers.length}</li>`;
-      story += `<li>Equipos representados: ${new Set(Object.values(tournaments).flatMap(t => Array.from(t.teams))).size}</li>`;
-      story += `<li>Penaltis parados en total: ${Object.values(tournaments).reduce((sum, t) => sum + t.totalPenaltiesSaved, 0)}</li>`;
-      story += `<li>PSO parados en total: ${Object.values(tournaments).reduce((sum, t) => sum + t.totalPSOSaved, 0)}</li>`;
-      story += `</ul>`;
-      
-      story += `</div>`;
-      
-      storyDiv.innerHTML += story;
-    }
-
-    let isLoading = false;
-      
-    function loadYear(year) {
-      document.getElementById("loading").classList.remove("hidden");
-      document.getElementById("dashboard").innerHTML = '';
-
-      if (isLoading) return;
-      isLoading = true;
-
-      // Limpiar completamente los objetos
-      for (const key in goalkeeperStats) delete goalkeeperStats[key];
-      for (const key in tournamentStats) delete tournamentStats[key];
-
-      const files = fileSets[year];
-
-      if (files.length === 0) {
-        document.getElementById("loading").classList.add("hidden");
-        isLoading = false;
-        return;
-      }
-
-      const promises = files.map(file =>
-        new Promise((resolve, reject) => {
-          Papa.parse(file, {
-            download: true,
-            header: true,
-            complete: results => {
-              processData(file, results.data).then(resolve).catch(reject);
-            },
-            error: err => reject(err)
-          });
-        })
-      );
-
-      Promise.all(promises).then(results => {
-        // Unificar todos los porteros
-        const mergedGoalkeepers = {};
-
-        results.flat().forEach(gk => {
-          const name = gk.name;
-          if (!mergedGoalkeepers[name]) {
-            mergedGoalkeepers[name] = {
-              ...gk,
-              teams: new Set(gk.teams),
-              timeline: [...gk.timeline]
-            };
-          } else {
-            mergedGoalkeepers[name].pm += gk.pm;
-            mergedGoalkeepers[name].sav += gk.sav;
-            mergedGoalkeepers[name].gc += gk.gc;
-            mergedGoalkeepers[name].penR += gk.penR;
-            mergedGoalkeepers[name].psoR += gk.psoR;
-            gk.teams.forEach(t => mergedGoalkeepers[name].teams.add(t));
-            mergedGoalkeepers[name].timeline.push(...gk.timeline);
-          }
-        });
-
-        const goalkeepersArray = Object.values(mergedGoalkeepers).map(gk => ({
-          ...gk,
-          team: Array.from(gk.teams).join(", ")
-        }));
-
-        drawBasicCharts(goalkeepersArray);
-        drawCorrelationCharts(goalkeepersArray);
-        runAdvancedML(goalkeepersArray);
-        clusterPlayers(goalkeepersArray);
-        generateStorytelling(goalkeepersArray, tournamentStats);
-
-        document.getElementById("loading").classList.add("hidden");
-        isLoading = false;
-      }).catch(err => {
-        console.error("Error procesando archivos:", err);
-        document.getElementById("loading").classList.add("hidden");
-        isLoading = false;
-      });
-    }
-
-    function drawBasicCharts(goalkeepers) {
-      const categories = [
-        { key: 'sav', label: 'Paradas (Sav)', color: '#3B82F6' },
-        { key: 'gc', label: 'Goles Encajados (GC)', color: '#EF4444' },
-        { key: 'penR', label: 'Penaltis Parados (Pen.R)', color: '#10B981' },
-        { key: 'psoR', label: 'PSO Parados (PSO.R)', color: '#8B5CF6' }
-      ];
-
-      categories.forEach(cat => {
-        const top = [...goalkeepers].filter(gk => gk[cat.key] > 0).sort((a, b) => b[cat.key] - a[cat.key]).slice(0, 10);
-        const chartDiv = document.createElement("div");
-        chartDiv.className = "bg-white rounded shadow p-4";
-        chartDiv.style.height = "400px";
-        document.getElementById("dashboard").appendChild(chartDiv);
-        
-        const chart = echarts.init(chartDiv);
-        chart.setOption({
-          title: { text: `Top 10 - ${cat.label}`, left: 'center' },
-          tooltip: {
-            confine: true,
-            formatter: params => {
-              const gk = goalkeepers.find(g => g.name === params.name);
-              return explainGoalkeeper(gk);
-            }
-          },
-          xAxis: {
-            type: 'category',
-            data: top.map(gk => gk.name),
-            axisLabel: {
-              rotate: 30,
-              interval: 0,
-              formatter: function (value) {
-                return value.length > 15 ? value.slice(0, 12) + '...' : value;
-              },
-              textStyle: {
-                fontSize: 12,
-                lineHeight: 16
-              }
-            }
-          },
-          yAxis: { type: 'value' },
-          series: [{
-            data: top.map(gk => gk[cat.key]),
-            type: 'bar',
-            itemStyle: { color: cat.color },
-            emphasis: { itemStyle: { color: '#4CAF50' } }
-          }],
-          grid: {
-            left: '10%',
-            right: '10%',
-            bottom: '25%' 
-          }
-        });
-      });
-
-      // Gráfico de efectividad (paradas / (paradas + goles))
-      const effectivenessDiv = document.createElement("div");
-      effectivenessDiv.className = "bg-white rounded shadow p-4";
-      effectivenessDiv.style.height = "400px";
-      document.getElementById("dashboard").appendChild(effectivenessDiv);
-      
-      const effectivenessData = goalkeepers
-        .filter(gk => gk.pm >= 5) // Mínimo 5 partidos
-        .map(gk => ({
-          name: gk.name,
-          value: (gk.sav / (gk.sav + gk.gc)) * 100,
-          team: gk.team,
-          saves: gk.sav,
-          conceded: gk.gc
-        }))
-        .sort((a, b) => b.value - a.value)
-        .slice(0, 10);
-      
-      const effectivenessChart = echarts.init(effectivenessDiv);
-      effectivenessChart.setOption({
-        title: { text: 'Top 10 - Porcentaje de Paradas', left: 'center' },
-        tooltip: {
-          formatter: params => {
-            return `
-              <div style="max-width: 300px;">
-                <strong>${params.data.name}</strong><br>
-                <strong>Equipo:</strong> ${params.data.team}<br>
-                <strong>Paradas:</strong> ${params.data.saves}<br>
-                <strong>Goles encajados:</strong> ${params.data.conceded}<br>
-                <strong>Efectividad:</strong> ${params.data.value.toFixed(1)}%<br>
-              </div>
-            `;
-          }
-        },
-        xAxis: {
-          type: 'category',
-          data: effectivenessData.map(gk => gk.name),
-          axisLabel: { rotate: 30 }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            formatter: '{value}%'
-          }
-        },
-        series: [{
-          data: effectivenessData.map(gk => gk.value),
-          type: 'bar',
-          itemStyle: { color: '#10B981' }
-        }]
-      });
-
-      // Tabla de estadísticas completa
-      const tableDiv = document.createElement("div");
-      tableDiv.className = "bg-white rounded shadow p-4 lg:col-span-2 overflow-x-auto";
-      document.getElementById("dashboard").appendChild(tableDiv);
-      
-      const tableHTML = `
-        <h3 class="text-lg font-semibold mb-4 text-center">Estadísticas Completas de Porteros</h3>
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ranking</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equipo</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PM</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sav.</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GC</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pen.R</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PSO.R</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            ${goalkeepers.sort((a, b) => b.sav - a.sav).map((gk, index) => `
-              <tr class="hover:bg-gray-50">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${index + 1}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${gk.name}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${gk.team}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${gk.pm}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${gk.sav}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${gk.gc}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${gk.penR}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${gk.psoR}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `;
-      
-      tableDiv.innerHTML = tableHTML;
-    }
-    
-    document.addEventListener("DOMContentLoaded", function() {
-      if (fileSets && fileSets['2023']) {
-        loadYear('2023');
-      } else {
-        console.warn("fileSets['2023'] aún no está disponible.");
-      }
-    });
-  </script>
 </body>
 </html>

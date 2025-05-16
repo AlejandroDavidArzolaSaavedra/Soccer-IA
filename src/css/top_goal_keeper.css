@@ -1,0 +1,44 @@
+.card-tilted {
+    transform: rotateX(75deg) translateY(-50px) translateZ(-50px);
+    transition: transform 0.6s, box-shadow 0.6s;
+}
+
+.card-tilted:hover {
+    transform: rotateX(0deg);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) rotate(1deg);
+    }
+    100% {
+        transform: translateX(100%) rotate(1deg);
+    }
+}
+
+.shine-effect::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 150%;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.6), transparent 70%);
+    transform: translateX(-100%) rotate(12deg);
+    animation: shine 2s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.card-tilted:hover .shine-effect::before {
+    opacity: 1;
+}
+
+#tooltip {
+    pointer-events: none;
+    white-space: normal;
+}
+
+
