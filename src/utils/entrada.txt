@@ -1,0 +1,234 @@
+Ranking
+Name
+Team
+PM
+Y.C.
+R.C.
+1	
+Aitor Vives
+Saiyans FC
+12	3	0
+1	
+Antoni Hernández
+El Barrio
+10	3	0
+1	
+Iker González
+PIO FC
+9	3	1
+1	
+Mohamed Boullouh
+Rayo de Barcelona
+10	3	0
+5	
+Oriol Boada
+Los Troncos FC
+10	2	0
+5	
+Mario Reyes
+Ultimate Móstoles
+14	2	0
+5	
+Daniel Pérez
+Rayo de Barcelona
+11	2	0
+5	
+Marc Granero
+Ultimate Móstoles
+15	2	0
+5	
+Román Alegre
+El Barrio
+10	2	1
+5	
+Martín Mantovani
+Aniquiladores FC
+13	2	0
+5	
+Nico Santos
+1K FC
+11	2	0
+5	
+Adrià Escribano
+Kunisports
+12	2	0
+5	
+Marc Valiente
+El Barrio
+8	2	0
+5	
+Jordi Gómez
+Los Troncos FC
+9	2	0
+5	
+Hichem Boumedol
+Aniquiladores FC
+12	2	0
+5	
+Diego Jiménez
+Los Troncos FC
+12	2	0
+5	
+Franco Romero
+Kunisports
+12	2	0
+18	
+Álex Campuzano
+PIO FC
+10	1	1
+18	
+David Alba
+Aniquiladores FC
+7	1	0
+18	
+Gilles Vidal
+Porcinos FC
+6	1	0
+18	
+Pablo Beguer
+xBuyer Team
+12	1	0
+18	
+Edgar Álvaro
+Aniquiladores FC
+13	1	0
+18	
+Pol Lechuga
+1K FC
+12	1	0
+18	
+Sergio Sánchez
+Porcinos FC
+11	1	0
+18	
+Carles Planas
+Los Troncos FC
+12	1	0
+18	
+Iván López 'Cokita'
+Saiyans FC
+13	1	0
+18	
+Guillem 'ZZ' Ruiz
+Kunisports
+11	1	0
+18	
+Juanma González
+xBuyer Team
+10	1	0
+18	
+Daniel Santiago
+xBuyer Team
+11	1	1
+18	
+Víctor Cócera
+Aniquiladores FC
+11	1	0
+18	
+Marcos Guerrero
+Rayo de Barcelona
+2	1	0
+18	
+Raúl Ledo
+1K FC
+11	1	0
+18	
+Marc Pluvins
+El Barrio
+12	1	0
+18	
+Javi Espinosa
+Aniquiladores FC
+13	1	0
+18	
+Hugo Fraile
+Aniquiladores FC
+13	1	0
+18	
+Nico Pareja
+Jijantes FC
+7	1	0
+18	
+Diego de la Mata
+Ultimate Móstoles
+15	1	0
+18	
+Gerard Verge
+1K FC
+4	1	0
+18	
+Adri Gimeno
+xBuyer Team
+11	1	0
+18	
+Dani 'Mini Bartu' Ruiz
+Kunisports
+12	1	0
+18	
+Xavi Liébanas
+Aniquiladores FC
+13	1	0
+18	
+Nil Ayats
+Jijantes FC
+9	1	0
+18	
+Pablo Fernández
+PIO FC
+11	1	0
+18	
+Adrián Espinar
+Saiyans FC
+13	1	0
+18	
+Sergio Juste
+Saiyans FC
+9	1	0
+18	
+Iker Alcarazo
+xBuyer Team
+11	1	0
+18	
+David Pérez Picón
+xBuyer Team
+12	1	0
+18	
+Miraash Imthiyaz
+Aniquiladores FC
+13	1	0
+18	
+Pablo Saborido
+El Barrio
+11	1	0
+18	
+Rafa Leva
+El Barrio
+12	1	0
+18	
+Isaac Serna
+1K FC
+10	1	0
+18	
+Ismael González
+Rayo de Barcelona
+8	1	0
+18	
+Xavi Pluvins
+El Barrio
+9	1	0
+18	
+Pol Ortega
+Jijantes FC
+13	1	0
+18	
+Michel Owono
+Rayo de Barcelona
+4	1	0
+18	
+Nicolás García
+Jijantes FC
+2	1	0
+18	
+Javi Gómez
+Rayo de Barcelona
+1	1	0
