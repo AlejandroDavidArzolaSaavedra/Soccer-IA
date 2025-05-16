@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">  
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -66,9 +66,9 @@ white-space: normal;
   <div class="max-w-7xl mx-auto">
     <!-- Header con logo y título -->
     <header class="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
-      <a href="./index.html">
+      <a href="../index.html">
       <div class="flex items-center gap-3">
-          <img src="./assets/kingsIA.svg" alt="Logo Kings League" style="width: 6rem">
+          <img src="../assets/kingsIA.svg" alt="Logo Kings League" style="width: 6rem">
         <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r"  style="color: #8E0303;">
           Estadísticas de Tarjetas <span class="block text-xl text-gray-600">Kings League Mercato</span>
         </h1>
@@ -179,11 +179,11 @@ white-space: normal;
   </a>
     </nav>
 
-    <audio id="miAudio" src="./assets/cards.mp3"></audio>
+    <audio id="miAudio" src="../assets/cards.mp3"></audio>
 
     <!-- Añadimos imagen de portada-->
     <div class="relative w-full mb-8 cursor-pointer" onclick="document.getElementById('miAudio').play()" style="justify-content: center;">
-      <img src="./assets/portada_cards.png" alt="Kings League" class="w-full h-112 rounded-lg shadow-lg">
+      <img src="../assets/portada_cards.png" alt="Kings League" class="w-full h-112 rounded-lg shadow-lg">
       <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50"></div>
       <h2 class="absolute top-4 left-4 text-white text-2xl font-bold">Estadísticas de Tarjetas- Kings League Mercato</h2>
     </div>
@@ -300,15 +300,14 @@ white-space: normal;
 
     const fileSets = {
       "2023": [
-        "./json/2023_2024/cards/1_split_kings.csv",
-        "./json/2023_2024/cards/2_split_kings.csv",
-        "./json/2023_2024/cards/3_split_kings.csv",
-        "./json/2023_2024/cards/kings_cup.csv"
-        // No incluimos kingdom_cup porque no tiene datos de tarjetas
+        "../json/2023_2024/cards/1_split_kings.csv",
+        "../json/2023_2024/cards/2_split_kings.csv",
+        "../json/2023_2024/cards/3_split_kings.csv",
+        "../json/2023_2024/cards/kings_cup.csv"
       ],
       "2024": [
-        "./json/2024_2025/cards/4_split_kings.csv",
-        "./json/2024_2025/cards/5_split_kings.csv"
+        "../json/2024_2025/cards/4_split_kings.csv",
+        "../json/2024_2025/cards/5_split_kings.csv"
       ]
     };
     fileSets["combined"] = [...fileSets["2023"], ...fileSets["2024"]];
