@@ -55,15 +55,15 @@
     white-space: normal;
   }
 </style>
-<audio id="miAudio" src="/src/assets/ofensives.mp3"></audio>
+<audio id="miAudio" src="./assets/ofensives.mp3"></audio>
 
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 text-gray-800 min-h-screen p-6">
   <div class="max-w-7xl mx-auto" onclick="document.getElementById('miAudio').play()" >
     <!-- Header con logo y título -->
     <header class="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
-      <a href="/src/index.html">
+      <a href="./index.html">
         <div class="flex items-center gap-3">
-          <img src="/src/assets/kingsIA.svg" alt="Logo Kings League" style="width: 6rem">
+          <img src="./assets/kingsIA.svg" alt="Logo Kings League" style="width: 6rem">
           <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r" style="color: #8E0303;">
             Estadísticas de Ataque <span class="block text-xl text-gray-600">Kings League Mercato</span>
           </h1>
@@ -173,7 +173,7 @@
 
     <!-- Añadimos imagen de portada-->
     <div class="relative w-full mb-8 cursor-pointer" onclick="document.getElementById('miAudio').play()" style="justify-content: center;">
-      <img src="/src/assets/portada_ofensives.png" alt="Kings League" class="w-full h-112 rounded-lg shadow-lg">
+      <img src="./assets/portada_ofensives.png" alt="Kings League" class="w-full h-112 rounded-lg shadow-lg">
       <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50"></div>
       <h2 class="absolute top-4 left-4 text-white text-2xl font-bold">Estadísticas Atacantes - Kings League Mercato</h2>
     </div>
@@ -290,13 +290,13 @@
 
     const fileSets = {
       "2023": [
-        "/src/json/2023_2024/offensives/1_split_kings.csv",
-        "/src/json/2023_2024/offensives/2_split_kings.csv",
-        "/src/json/2023_2024/offensives/3_split_kings.csv"
+        "./json/2023_2024/offensives/1_split_kings.csv",
+        "./json/2023_2024/offensives/2_split_kings.csv",
+        "./json/2023_2024/offensives/3_split_kings.csv"
       ],
       "2024": [
-        "/src/json/2024_2025/offensives/4_split_kings.csv",
-        "/src/json/2024_2025/offensives/5_split_kings.csv"
+        "./json/2024_2025/offensives/4_split_kings.csv",
+        "./json/2024_2025/offensives/5_split_kings.csv"
       ]
     };
     fileSets["combined"] = [...fileSets["2023"], ...fileSets["2024"]];
